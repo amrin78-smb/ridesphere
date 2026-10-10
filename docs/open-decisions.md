@@ -11,7 +11,6 @@ Choices that belong to the owners and are not yet made. Each one blocks the work
 | 8 | First paid transaction: event registration or trip deposit | Decide after organiser interviews | All payment work (increment 10) | Open |
 | 9 | Payment gateway | Chosen after decision 8, for the launch country | All payment work | Open |
 | 10 | Email provider | Any transactional provider with an HTTP API | Email verification, password reset, email notifications | Open |
-| 18 | Google OAuth client | Owner creates it in Google Cloud Console (steps in the README) | Google sign-in | Open: credentials needed from the owner |
 | 19 | Cloudflare Workers plan before launch | Move to Workers Paid before real users, or load-test password hashing on the free plan first | Reliability of sign-in | Open. Free plan for now, which is fine for testing |
 | 20 | Sign-in on iOS at launch | Either offer email and password only on iOS, or add Sign in with Apple before the App Store submission | iOS release | Open. Apple's review guideline 4.8 expects an app that offers Google sign-in to also offer an equivalent option such as Sign in with Apple |
 | 11 | Launch languages | English first, strings translation-ready | Localisation effort | Open |
@@ -37,4 +36,5 @@ Choices that belong to the owners and are not yet made. Each one blocks the work
 | 2026-10-10 | Commit finished work and push directly to `main` | Owner |
 | 2026-10-10 | Apple sign-in dropped for now; sign-in is email and password plus Google. Supersedes the row above | Owner. See open decision 20 for the iOS consequence |
 | 2026-10-10 | Cloudflare free plan while testing | Owner |
+| 2026-10-10 | Google OAuth client created and set on staging (was decision 18) | Owner |
 | 2026-10-10 | Staging environment on Cloudflare (Worker `ridesphere-api-staging`, Neon `staging` branch) | Owner asked to publish for testing |

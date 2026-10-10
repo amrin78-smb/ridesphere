@@ -6,6 +6,7 @@ import { StyleSheet, View } from 'react-native';
 import { Button } from '@/components/button';
 import { TextField } from '@/components/text-field';
 import { ThemedText } from '@/components/themed-text';
+import { usePublicConfig } from '@/features/auth/use-public-config';
 import { authClient } from '@/lib/auth-client';
 import { Spacing } from '@/theme';
 
@@ -40,6 +41,8 @@ export function AuthForm() {
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
   const [formError, setFormError] = useState<string>();
   const [submitting, setSubmitting] = useState(false);
+  const [googlePending, setGooglePending] = useState(false);
+  const googleEnabled = usePublicConfig().data?.auth.google === true;
 
   const isSignUp = mode === 'sign-up';
 
@@ -73,6 +76,27 @@ export function AuthForm() {
       setFormError('Could not reach RideSphere. Check your connection.');
     } finally {
       setSubmitting(false);
+    }
+  }
+
+  async function continueWithGoogle() {
+    setFormError(undefined);
+    setGooglePending(true);
+    try {
+      // Opens the system browser and returns to the Profile tab when Google is done.
+      const result = await authClient.signIn.social({
+        provider: 'google',
+        callbackURL: '/profile',
+      });
+      if (result.error) {
+        setFormError('Google sign-in did not complete. Please try again.');
+        return;
+      }
+      await queryClient.invalidateQueries();
+    } catch {
+      setFormError('Google sign-in did not complete. Please try again.');
+    } finally {
+      setGooglePending(false);
     }
   }
 
@@ -131,12 +155,22 @@ export function AuthForm() {
         label={isSignUp ? 'Create account' : 'Sign in'}
         onPress={() => void submit()}
         loading={submitting}
+        disabled={googlePending}
       />
+      {googleEnabled ? (
+        <Button
+          label="Continue with Google"
+          onPress={() => void continueWithGoogle()}
+          variant="secondary"
+          loading={googlePending}
+          disabled={submitting}
+        />
+      ) : null}
       <Button
         label={isSignUp ? 'I already have an account' : 'Create an account'}
         onPress={switchMode}
         variant="secondary"
-        disabled={submitting}
+        disabled={submitting || googlePending}
       />
     </View>
   );

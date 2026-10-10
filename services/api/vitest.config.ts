@@ -12,8 +12,13 @@ export default defineConfig({
     cloudflareTest({
       wrangler: { configPath: './wrangler.jsonc' },
       miniflare: {
-        // Stands in for the secret that .dev.vars or `wrangler secret` provides elsewhere.
-        bindings: { BETTER_AUTH_SECRET: 'test-only-secret-not-used-anywhere-else-0000' },
+        // Stand in for what .dev.vars or `wrangler secret` provides elsewhere.
+        bindings: {
+          BETTER_AUTH_SECRET: 'test-only-secret-not-used-anywhere-else-0000',
+          // Blank means unset. Keeps a developer's real .dev.vars credentials out of tests.
+          GOOGLE_CLIENT_ID: '',
+          GOOGLE_CLIENT_SECRET: '',
+        },
       },
     }),
   ],

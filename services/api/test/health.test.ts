@@ -55,6 +55,14 @@ describe('GET /', () => {
   });
 });
 
+describe('GET /api/v1/config', () => {
+  it('reports Google sign-in as off when it is not configured, and reveals nothing else', async () => {
+    const res = await get('/api/v1/config');
+    expect(res.status).toBe(200);
+    expect(await res.json()).toEqual({ auth: { google: false } });
+  });
+});
+
 describe('error handling', () => {
   it('returns the error envelope for an unknown route', async () => {
     const res = await get('/api/v1/nope');

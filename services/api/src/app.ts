@@ -9,6 +9,7 @@ import { createAuth } from './auth';
 import { AUTH_BASE_PATH } from './auth/options';
 import { configMiddleware } from './config/env';
 import { dbMiddleware } from './db/middleware';
+import { configRoutes } from './modules/config/routes';
 import { healthRoutes } from './modules/health/routes';
 import { meRoutes } from './modules/me/routes';
 
@@ -32,6 +33,7 @@ app.get('/', (c) =>
 );
 
 app.route('/api/v1/health', healthRoutes);
+app.route('/api/v1/config', configRoutes);
 
 // Sign-up, sign-in, sign-out and sessions are served by Better Auth (ADR-0005).
 app.use(`${AUTH_BASE_PATH}/*`, dbMiddleware);
