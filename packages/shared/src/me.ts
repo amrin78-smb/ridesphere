@@ -1,5 +1,7 @@
 import { z } from 'zod';
 
+import { preferencesSchema } from './preferences';
+
 export const profileVisibilitySchema = z.enum(['public', 'members', 'private']);
 export type ProfileVisibility = z.infer<typeof profileVisibilitySchema>;
 
@@ -19,6 +21,7 @@ export const meResponseSchema = z.object({
     visibility: profileVisibilitySchema,
     role: memberRoleSchema,
   }),
+  preferences: preferencesSchema,
 });
 export type MeResponse = z.infer<typeof meResponseSchema>;
 

@@ -19,19 +19,18 @@ export class ApiError extends Error {
 }
 
 type RequestOptions = {
-  method?: 'GET' | 'POST' | 'PATCH' | 'DELETE';
+  method?: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
   body?: unknown;
   /** Send the member's session. Leave off for public endpoints. */
   authenticated?: boolean;
   signal?: AbortSignal | undefined;
 };
 
-/** Calls a path under /api/v1 and validates the response against the shared contract. */
-export async function apiRequest<T>(
+/** Performs the request and returns the decoded body, or throws an ApiError. */
+async function send(
   path: string,
-  schema: z.ZodType<T>,
-  { method = 'GET', body, authenticated = false, signal }: RequestOptions = {},
-): Promise<T> {
+  { method = 'GET', body, authenticated = false, signal }: RequestOptions,
+): Promise<unknown> {
   if (!apiBaseUrl) {
     throw new ApiError('not-configured', 'The app is not connected to a RideSphere server.');
   }
@@ -74,11 +73,25 @@ export async function apiRequest<T>(
     throw new ApiError('http', 'Something went wrong.', { status: response.status });
   }
 
-  const parsed = schema.safeParse(payload);
+  return payload;
+}
+
+/** Calls a path under /api/v1 and validates the response against the shared contract. */
+export async function apiRequest<T>(
+  path: string,
+  schema: z.ZodType<T>,
+  options: RequestOptions = {},
+): Promise<T> {
+  const parsed = schema.safeParse(await send(path, options));
   if (!parsed.success) {
     throw new ApiError('invalid-response', 'RideSphere sent a response this app cannot read.');
   }
   return parsed.data;
+}
+
+/** Calls a path under /api/v1 that answers without a body. */
+export async function apiCommand(path: string, options: RequestOptions): Promise<void> {
+  await send(path, options);
 }
 
 export function apiGet<T>(path: string, schema: z.ZodType<T>, signal?: AbortSignal): Promise<T> {

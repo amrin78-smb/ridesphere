@@ -32,6 +32,7 @@ Status: baseline written before implementation. Every mitigation below is a requ
 | Forged session or token | Sessions validated server-side on every request; signing secret held as a Worker secret and rotatable |
 | Account hijack through email change or recovery | Verified, single-use, short-lived links through Better Auth; notify the old address; responses do not reveal whether an email is registered |
 | Deep link opened without a session | Route to sign-in and resume; never render protected data from cache for a signed-out user |
+| Stolen session used to delete the account | Accepted for now: deletion needs a confirmation value but not re-authentication. Add a fresh sign-in requirement before launch |
 
 ### Privilege escalation
 

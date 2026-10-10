@@ -6,7 +6,7 @@ RideSphere is about social discovery and organising real-world rides and trips. 
 
 ## Current state
 
-Increments 1–3 are done and increment 4 (auth and profile) is partly done: monorepo, CI, API Worker deployed to staging, email-and-password sign-up/sign-in through Better Auth, `/api/v1/me`, and app screens for sign-in and basic profile. The app has not yet been run on a physical device. Google sign-in works on staging from Android in Expo Go; iOS and standalone builds are untested (Apple sign-in was dropped for now). Still open in increment 4: email verification and password reset (waiting on an email provider), account deletion, riding preferences. Launch market is Thailand (Asia/Bangkok, THB). Check `docs/feature-matrix.md` for what exists before assuming anything does.
+Increments 1–3 are done and increment 4 (auth and profile) is partly done: monorepo, CI, API Worker deployed to staging, email-and-password sign-up/sign-in through Better Auth, `/api/v1/me`, and app screens for sign-in and basic profile. The app has not yet been run on a physical device. Google sign-in works on staging from Android in Expo Go; iOS and standalone builds are untested (Apple sign-in was dropped for now). Riding preferences and account deletion are built and verified on staging, with app screens not yet tried on a device. Still open in increment 4: email verification and password reset (waiting on a domain and email provider) and avatars (waiting on media storage). Next is increment 5, ride discovery. Launch market is Thailand (Asia/Bangkok, THB). Check `docs/feature-matrix.md` for what exists before assuming anything does.
 
 ## Where things are
 
@@ -79,6 +79,8 @@ In `apps/mobile`, add packages with `pnpm exec expo install <pkg>` so versions m
 ## Rules that are easy to get wrong
 
 **Auth endpoints** (`/api/v1/auth/*`) belong to Better Auth and return its error shape, not the RideSphere envelope. Protect a route with `dbMiddleware` then `requireUser`; read the member from `c.get('user')`. After changing `src/auth/options.ts`, run `pnpm --filter @ridesphere/api auth:generate` and then `db:generate`.
+
+**Deleting an account** relies on `ON DELETE CASCADE` from the Better Auth `user` table. Any new table holding member data must cascade or be handled in `DELETE /api/v1/me`, and be added to `docs/privacy/data-inventory.md`.
 
 **Authority lives on the server.** Every protected route checks the authenticated user and the resource-level permission. Hiding a button is not authorisation. Roles: visitor, member, organiser, club administrator, moderator, platform administrator. Nobody can grant themselves a role.
 

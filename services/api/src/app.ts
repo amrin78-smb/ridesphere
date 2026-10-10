@@ -42,6 +42,7 @@ app.on(['GET', 'POST'], `${AUTH_BASE_PATH}/*`, (c) =>
 );
 
 app.use('/api/v1/me', dbMiddleware);
+app.use('/api/v1/me/*', dbMiddleware);
 app.route('/api/v1/me', meRoutes);
 
 app.openAPIRegistry.registerComponent('securitySchemes', 'session', {

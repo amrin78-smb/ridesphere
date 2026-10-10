@@ -7,7 +7,7 @@ import { MinTouchTarget, Radius, Spacing } from '@/theme';
 type ButtonProps = {
   label: string;
   onPress: () => void;
-  variant?: 'primary' | 'secondary';
+  variant?: 'primary' | 'secondary' | 'danger';
   loading?: boolean;
   disabled?: boolean;
 };
@@ -16,7 +16,8 @@ export function Button({ label, onPress, variant = 'primary', loading, disabled 
   const theme = useTheme();
   const inactive = Boolean(disabled || loading);
   const background = variant === 'primary' ? theme.accent : theme.backgroundSelected;
-  const foreground = variant === 'primary' ? theme.onAccent : theme.text;
+  const foreground =
+    variant === 'primary' ? theme.onAccent : variant === 'danger' ? theme.danger : theme.text;
 
   return (
     <Pressable

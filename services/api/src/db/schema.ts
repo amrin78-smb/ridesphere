@@ -1,5 +1,5 @@
 import { sql } from 'drizzle-orm';
-import { pgEnum, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
+import { check, integer, pgEnum, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
 
 import { user } from './auth-schema';
 
@@ -38,6 +38,54 @@ export const profiles = pgTable('profiles', {
   status: accountStatus('status').notNull().default('active'),
   ...timestamps,
 });
+
+export const ridingPace = pgEnum('riding_pace', ['relaxed', 'steady', 'brisk', 'fast']);
+export const experienceLevel = pgEnum('experience_level', [
+  'beginner',
+  'intermediate',
+  'advanced',
+  'expert',
+]);
+
+/**
+ * Riding preferences, one row per member, created the first time they save any.
+ * List values are validated against the shared allowed values by the API; the checks here
+ * keep the numbers sane even if something writes around the API.
+ */
+export const userPreferences = pgTable(
+  'user_preferences',
+  {
+    userId: uuid('user_id')
+      .primaryKey()
+      .references(() => user.id, { onDelete: 'cascade' }),
+    bikeTypes: text('bike_types')
+      .array()
+      .notNull()
+      .default(sql`'{}'::text[]`),
+    ridingStyles: text('riding_styles')
+      .array()
+      .notNull()
+      .default(sql`'{}'::text[]`),
+    languages: text('languages')
+      .array()
+      .notNull()
+      .default(sql`'{}'::text[]`),
+    pace: ridingPace('pace'),
+    experience: experienceLevel('experience'),
+    distanceMinKm: integer('distance_min_km'),
+    distanceMaxKm: integer('distance_max_km'),
+    ...timestamps,
+  },
+  (table) => [
+    check(
+      'user_preferences_distance_range',
+      sql`(${table.distanceMinKm} is null or ${table.distanceMinKm} between 1 and 400)
+        and (${table.distanceMaxKm} is null or ${table.distanceMaxKm} between 1 and 400)
+        and (${table.distanceMinKm} is null or ${table.distanceMaxKm} is null
+          or ${table.distanceMinKm} <= ${table.distanceMaxKm})`,
+    ),
+  ],
+);
 
 export const clubStatus = pgEnum('club_status', ['pending', 'active', 'suspended', 'archived']);
 

@@ -66,9 +66,11 @@ To be supported by product features or a documented manual process:
 - **Deletion.** In-app account deletion, which both app stores require.
 - **Withdrawing consent.** Notification and visibility settings.
 
-## Proposed account deletion behaviour
+## Account deletion
 
-Owner to confirm (open decision 13):
+**What happens today.** Deleting an account erases it at once and for good: identity, credentials, sessions, linked Google sign-in, profile and riding preferences. There is no grace period and nothing is kept. That is the right behaviour while those are the only data held. It must be revisited before posts, RSVPs, reports or bookings exist, because some of those have to outlive the account.
+
+**Proposed behaviour once that content exists.** Owner to confirm (open decision 13):
 
 1. The account is deactivated at once and disappears from the app.
 2. After a short grace period the profile, preferences, avatar, push tokens, blocks and future RSVPs are erased, and the auth records (credentials, sessions, linked accounts) are deleted.

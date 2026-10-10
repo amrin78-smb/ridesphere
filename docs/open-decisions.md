@@ -16,7 +16,7 @@ Choices that belong to the owners and are not yet made. Each one blocks the work
 | 20 | Sign-in on iOS at launch | Either offer email and password only on iOS, or add Sign in with Apple before the App Store submission | iOS release | Open. Apple's review guideline 4.8 expects an app that offers Google sign-in to also offer an equivalent option such as Sign in with Apple |
 | 11 | Launch languages | English first, strings translation-ready | Localisation effort | Open |
 | 12 | Admin interface | Admin API first, minimal web console behind Cloudflare Access next | Moderation operations | Open |
-| 13 | Account deletion and data retention policy | See proposals in the [data inventory](privacy/data-inventory.md) | Account deletion, privacy policy | Open |
+| 13 | Data retention policy when an account is deleted | See proposals in the [data inventory](privacy/data-inventory.md). Deletion is immediate and total for now | Community, RSVP and booking features; privacy policy | Open. Not urgent until member content exists |
 | 14 | Recovery targets: acceptable data loss and downtime | Set with the Neon plan in hand | [Backup runbook](runbooks/backup-restore.md) | Open |
 | 15 | Supported iOS and Android versions | Current and previous major versions | Device test matrix | Open |
 | 16 | Founder agreement | Sign before meaningful build investment | Not a technical blocker | Open |

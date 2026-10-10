@@ -14,7 +14,7 @@ Last reviewed: 2026-10-10. Foundation only. The API is deployed to staging; prod
 | CI workflow | Implemented | Passing on GitHub. No bundle-size check yet |
 | API Worker skeleton, health and readiness endpoints, error envelope, request IDs, structured logs | Partial | Deployed to staging at `https://ridesphere-api-staging.amrin78.workers.dev`. No CORS, rate limiting or auth yet |
 | Env binding validation | Implemented | Validated once per isolate; covers environment, database and auth settings |
-| Drizzle schema and first migration | Partial | `clubs`, Better Auth tables and `profiles`, applied to Neon `dev` and `staging` |
+| Drizzle schema and first migration | Partial | `clubs`, Better Auth tables, `profiles` and `user_preferences`, applied to Neon `dev` and `staging` |
 | Hyperdrive connectivity | Partial | Staging Worker reaches Neon `staging` through Hyperdrive (readiness 200, about 0.3 s). The row-lock transaction spike in ADR-0003 is still to do |
 | OpenAPI document | Partial | Generated at `/api/v1/openapi.json` for health and `/me`. Better Auth's own endpoints under `/api/v1/auth` are not in it |
 | Mobile app shell, tabs, design tokens | Partial | Five tabs, tokens, loading/empty/error component, API client, sign-in and profile screens. Runs on an Android phone in Expo Go; not yet run on iOS. Icons and splash are Expo placeholders |
@@ -32,8 +32,9 @@ Last reviewed: 2026-10-10. Foundation only. The API is deployed to staging; prod
 | A. Auth | Apple sign-in | Deferred | Dropped for now by the owner. See open decision 20 before an iOS release |
 | A. Auth | Sign-in rate limiting | Partial | Better Auth database-backed limits (5 sign-ins per minute, 5 sign-ups per hour per IP). No lockout or breached-password check yet |
 | A. Auth | Email verification and password recovery | Blocked | Open decision 10 (email provider) |
-| A. Auth | Account deletion | Blocked | Open decision 13 |
-| B. Profile | Basic profile: display name, home area, locale | Partial | `GET`/`PATCH /api/v1/me` and an edit screen. Avatar, languages, bike types, riding styles, pace and experience not started |
+| A. Auth | Account deletion | Partial | `DELETE /api/v1/me` erases the account immediately and permanently, with a confirmation step in the app. Verified on staging; the app screen is untested on a device. No grace period and no re-authentication before deleting; the retention policy (open decision 13) must be settled before posts or bookings exist |
+| B. Profile | Basic profile: display name, home area, locale | Partial | `GET`/`PATCH /api/v1/me` and an edit screen. Avatar not started (needs media storage) |
+| B. Profile | Riding preferences: bike types, styles, pace, experience, distance, languages | Partial | `PUT /api/v1/me/preferences` verified on staging; the editor screen is unit-tested but untested on a device |
 | B. Profile | Profile visibility controls | Partial | Stored and editable through the API; nothing reads it yet because no other member's profile can be viewed |
 | B. Profile | Roles and account status | Partial | Stored server-side, not settable by the member, suspended and deleted accounts are refused. No admin operations to change them yet |
 | C. Discovery | Ride list with cursor pagination | Not started | |
