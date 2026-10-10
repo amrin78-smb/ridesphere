@@ -7,7 +7,7 @@ import { Button } from '@/components/button';
 import { TextField } from '@/components/text-field';
 import { ThemedText } from '@/components/themed-text';
 import { usePublicConfig } from '@/features/auth/use-public-config';
-import { authClient } from '@/lib/auth-client';
+import { authClient, markBrowserSignInStarted } from '@/lib/auth-client';
 import { Spacing } from '@/theme';
 
 type Mode = 'sign-in' | 'sign-up';
@@ -84,6 +84,7 @@ export function AuthForm() {
     setGooglePending(true);
     try {
       // Opens the system browser and returns to the Profile tab when Google is done.
+      await markBrowserSignInStarted();
       const result = await authClient.signIn.social({
         provider: 'google',
         callbackURL: '/profile',

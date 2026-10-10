@@ -7,6 +7,7 @@ import { authClient } from '@/lib/auth-client';
 
 jest.mock('@/lib/auth-client', () => ({
   authClient: { signIn: { email: jest.fn(), social: jest.fn() }, signUp: { email: jest.fn() } },
+  markBrowserSignInStarted: jest.fn(),
 }));
 jest.mock('@/features/auth/use-public-config', () => ({ usePublicConfig: jest.fn() }));
 
