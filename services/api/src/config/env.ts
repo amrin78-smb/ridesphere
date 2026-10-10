@@ -2,19 +2,30 @@ import { appEnvSchema } from '@ridesphere/shared';
 import { createMiddleware } from 'hono/factory';
 import { z } from 'zod';
 
+import type { AuthSecrets } from '../auth/options';
 import { AppError } from '../common/errors';
 import { log } from '../common/logger';
 import type { AppBindings } from '../common/types';
+
+const optionalSecret = z.string().min(1).optional();
 
 // Every name here must also be described in the root .env.example.
 const configSchema = z.object({
   APP_ENV: appEnvSchema,
   HYPERDRIVE: z.object({ connectionString: z.string().min(1) }),
+  BETTER_AUTH_SECRET: z.string().min(32),
+  BETTER_AUTH_URL: z.url(),
+  GOOGLE_CLIENT_ID: optionalSecret,
+  GOOGLE_CLIENT_SECRET: optionalSecret,
+  APPLE_CLIENT_ID: optionalSecret,
+  APPLE_CLIENT_SECRET: optionalSecret,
+  APPLE_APP_BUNDLE_IDENTIFIER: optionalSecret,
 });
 
 export type AppConfig = {
   appEnv: z.infer<typeof appEnvSchema>;
   databaseUrl: string;
+  auth: AuthSecrets;
 };
 
 export function parseConfig(env: unknown): AppConfig {
@@ -25,9 +36,27 @@ export function parseConfig(env: unknown): AppConfig {
     log('error', 'invalid environment configuration', { invalid: invalid.join(',') });
     throw new AppError(500, 'SERVICE_MISCONFIGURED', 'The service is not configured correctly.');
   }
+  const e = result.data;
   return {
-    appEnv: result.data.APP_ENV,
-    databaseUrl: result.data.HYPERDRIVE.connectionString,
+    appEnv: e.APP_ENV,
+    databaseUrl: e.HYPERDRIVE.connectionString,
+    auth: {
+      secret: e.BETTER_AUTH_SECRET,
+      baseUrl: e.BETTER_AUTH_URL,
+      // A provider is offered only when all of its credentials are present.
+      google:
+        e.GOOGLE_CLIENT_ID && e.GOOGLE_CLIENT_SECRET
+          ? { clientId: e.GOOGLE_CLIENT_ID, clientSecret: e.GOOGLE_CLIENT_SECRET }
+          : undefined,
+      apple:
+        e.APPLE_CLIENT_ID && e.APPLE_CLIENT_SECRET && e.APPLE_APP_BUNDLE_IDENTIFIER
+          ? {
+              clientId: e.APPLE_CLIENT_ID,
+              clientSecret: e.APPLE_CLIENT_SECRET,
+              appBundleIdentifier: e.APPLE_APP_BUNDLE_IDENTIFIER,
+            }
+          : undefined,
+    },
   };
 }
 

@@ -10,7 +10,7 @@
 
   // Top level = local development (`wrangler dev`). The local database comes from
   // CLOUDFLARE_HYPERDRIVE_LOCAL_CONNECTION_STRING_HYPERDRIVE in services/api/.env, never from this file.
-  "vars": { "APP_ENV": "local" },
+  "vars": { "APP_ENV": "local", "BETTER_AUTH_URL": "http://localhost:8787" },
   "hyperdrive": [{ "binding": "HYPERDRIVE", "id": "00000000000000000000000000000000" }],
 
   // Bindings are not inherited by environments, so each one repeats them.
@@ -19,11 +19,15 @@
   "env": {
     "staging": {
       "name": "ridesphere-api-staging",
-      "vars": { "APP_ENV": "staging" },
+      "vars": {
+        "APP_ENV": "staging",
+        "BETTER_AUTH_URL": "https://ridesphere-api-staging.amrin78.workers.dev",
+      },
       "hyperdrive": [{ "binding": "HYPERDRIVE", "id": "1bf27d099d8949ac8b7464d203e386b4" }],
     },
     "production": {
       "name": "ridesphere-api-production",
+      // BETTER_AUTH_URL must be set to the production API origin before the first deploy.
       "vars": { "APP_ENV": "production" },
       "hyperdrive": [{ "binding": "HYPERDRIVE", "id": "REPLACE_WITH_PRODUCTION_HYPERDRIVE_ID" }],
     },

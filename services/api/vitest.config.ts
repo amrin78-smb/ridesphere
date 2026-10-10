@@ -8,5 +8,13 @@ process.env.CLOUDFLARE_HYPERDRIVE_LOCAL_CONNECTION_STRING_HYPERDRIVE =
   'postgres://test:test@127.0.0.1:1/test';
 
 export default defineConfig({
-  plugins: [cloudflareTest({ wrangler: { configPath: './wrangler.jsonc' } })],
+  plugins: [
+    cloudflareTest({
+      wrangler: { configPath: './wrangler.jsonc' },
+      miniflare: {
+        // Stands in for the secret that .dev.vars or `wrangler secret` provides elsewhere.
+        bindings: { BETTER_AUTH_SECRET: 'test-only-secret-not-used-anywhere-else-0000' },
+      },
+    }),
+  ],
 });

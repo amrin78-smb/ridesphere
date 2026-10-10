@@ -56,8 +56,13 @@ describe('error handling', () => {
 
 describe('configuration', () => {
   it('rejects an environment with missing or invalid bindings', () => {
-    expect(() => parseConfig({ APP_ENV: 'local' })).toThrow('not configured correctly');
+    expect(() => parseConfig({ ...env, HYPERDRIVE: undefined })).toThrow(
+      'not configured correctly',
+    );
     expect(() => parseConfig({ ...env, APP_ENV: 'prod' })).toThrow('not configured correctly');
+    expect(() => parseConfig({ ...env, BETTER_AUTH_SECRET: 'too-short' })).toThrow(
+      'not configured correctly',
+    );
   });
 
   it('accepts the test bindings', () => {
@@ -66,12 +71,12 @@ describe('configuration', () => {
 });
 
 describe('GET /api/v1/openapi.json', () => {
-  it('documents the health routes', async () => {
+  it('documents the routes', async () => {
     const res = await get('/api/v1/openapi.json');
     expect(res.status).toBe(200);
     const doc: { paths: Record<string, unknown> } = await res.json();
     expect(Object.keys(doc.paths)).toEqual(
-      expect.arrayContaining(['/api/v1/health', '/api/v1/health/ready']),
+      expect.arrayContaining(['/api/v1/health', '/api/v1/health/ready', '/api/v1/me']),
     );
   });
 });

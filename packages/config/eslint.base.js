@@ -7,7 +7,16 @@ import tseslint from 'typescript-eslint';
  */
 export function baseConfig(tsconfigRootDir) {
   return tseslint.config(
-    { ignores: ['dist', '.wrangler', 'drizzle', 'worker-configuration.d.ts', 'eslint.config.js'] },
+    {
+      ignores: [
+        'dist',
+        '.wrangler',
+        'drizzle',
+        'scripts',
+        'worker-configuration.d.ts',
+        'eslint.config.js',
+      ],
+    },
     js.configs.recommended,
     ...tseslint.configs.recommendedTypeChecked,
     {

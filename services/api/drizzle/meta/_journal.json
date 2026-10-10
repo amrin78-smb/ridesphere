@@ -8,6 +8,13 @@
       "when": 1791646934890,
       "tag": "0000_create_clubs",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1791648309604,
+      "tag": "0001_auth_and_profiles",
+      "breakpoints": true
     }
   ]
 }
