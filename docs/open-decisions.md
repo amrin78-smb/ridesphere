@@ -10,7 +10,8 @@ Choices that belong to the owners and are not yet made. Each one blocks the work
 | 7 | Trip business role: listing/enquiry or booking intermediary | Start with discovery and enquiry | Trips (increment 9), terms of service | Open |
 | 8 | First paid transaction: event registration or trip deposit | Decide after organiser interviews | All payment work (increment 10) | Open |
 | 9 | Payment gateway | Chosen after decision 8, for the launch country | All payment work | Open |
-| 10 | Email provider | Any transactional provider with an HTTP API | Email verification, password reset, email notifications | Open |
+| 10 | Email provider | Resend (free tier), or Cloudflare Email Service if the account moves to Workers Paid | Email verification, password reset, email notifications | Leaning Resend; waiting on decision 21 |
+| 21 | Domain name | Buy once the brand name is cleared (decision 17). Needed to send email to members, and for a production API address and store listings | Sending email to real users, production URL | Open: no domain yet |
 | 19 | Cloudflare Workers plan before launch | Move to Workers Paid before real users, or load-test password hashing on the free plan first | Reliability of sign-in | Open. Free plan for now, which is fine for testing |
 | 20 | Sign-in on iOS at launch | Either offer email and password only on iOS, or add Sign in with Apple before the App Store submission | iOS release | Open. Apple's review guideline 4.8 expects an app that offers Google sign-in to also offer an equivalent option such as Sign in with Apple |
 | 11 | Launch languages | English first, strings translation-ready | Localisation effort | Open |
