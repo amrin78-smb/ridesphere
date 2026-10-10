@@ -1,6 +1,6 @@
 # Deployment and rollback
 
-Status: draft procedure written before the first deployment. Commands show the intended shape and must be corrected against the real project once it exists. Mark this runbook as verified only after a rollback has been rehearsed in staging.
+Status: draft. Staging has been deployed by hand once (2026-10-10) with the commands in the README; production and CI-driven deploys do not exist yet, so the production steps below are still the intended shape rather than a tested procedure. Mark this runbook as verified only after a rollback has been rehearsed in staging.
 
 Owner: technical founder.
 

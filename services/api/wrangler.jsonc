@@ -14,12 +14,13 @@
   "hyperdrive": [{ "binding": "HYPERDRIVE", "id": "00000000000000000000000000000000" }],
 
   // Bindings are not inherited by environments, so each one repeats them.
-  // Replace the placeholder Hyperdrive IDs after `wrangler hyperdrive create` for each environment.
+  // Hyperdrive IDs are identifiers, not secrets. Production has no configuration yet:
+  // create one with `wrangler hyperdrive create` and replace the placeholder before deploying.
   "env": {
     "staging": {
       "name": "ridesphere-api-staging",
       "vars": { "APP_ENV": "staging" },
-      "hyperdrive": [{ "binding": "HYPERDRIVE", "id": "REPLACE_WITH_STAGING_HYPERDRIVE_ID" }],
+      "hyperdrive": [{ "binding": "HYPERDRIVE", "id": "1bf27d099d8949ac8b7464d203e386b4" }],
     },
     "production": {
       "name": "ridesphere-api-production",

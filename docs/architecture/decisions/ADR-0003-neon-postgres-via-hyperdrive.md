@@ -37,7 +37,9 @@ If any of these fail, the fallback is Neon's serverless driver (`@neondatabase/s
 
 **2026-10-10 — driver changed from `pg` to `postgres` (postgres.js).** `pg` is CommonJS with runtime-conditional requires, and its `pg-protocol` dependency failed to load inside the Workers test runtime (`@cloudflare/vitest-plugin`). postgres.js is ESM, ships a Workers build and is equally supported by Hyperdrive and Drizzle. Everything else in this decision is unchanged.
 
-**2026-10-10 — what has been verified so far.** A query from the Worker through Wrangler's local Hyperdrive emulation reaches the Neon `dev` branch in Singapore (readiness endpoint returns 200). Spike item 2 is settled differently than planned: API tests mock the database client, and tests that need Postgres are still to be designed. Items 1, 3 and 4 are open and need a real Hyperdrive configuration.
+**2026-10-10 — what has been verified so far.** A query from the Worker through Wrangler's local Hyperdrive emulation reaches the Neon `dev` branch in Singapore (readiness endpoint returns 200). Spike item 2 is settled differently than planned: API tests mock the database client, and tests that need Postgres are still to be designed. Items 1, 3 and 4 were open at this point.
+
+**2026-10-10 — staging.** The staging Worker reaches the Neon `staging` branch through a real Hyperdrive configuration with caching disabled; the readiness endpoint answered in roughly 0.3 s from Thailand. That is one measurement, not a latency study. Item 1 (row lock under concurrency) and item 4 (scale-to-zero behaviour) remain open.
 
 ## Alternatives considered
 

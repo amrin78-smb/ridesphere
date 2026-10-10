@@ -79,9 +79,20 @@ pnpm format:check && pnpm lint && pnpm typecheck && pnpm test && pnpm build
 
 CI runs the same sequence on every pull request. API tests run inside the Workers runtime and do not need a database.
 
+### Staging
+
+The API is deployed to Cloudflare at <https://ridesphere-api-staging.amrin78.workers.dev> (try `/api/v1/health/ready`), backed by the Neon `staging` branch through Hyperdrive.
+
+```sh
+DATABASE_URL="$(neon connection-string staging)" pnpm --filter @ridesphere/api db:migrate   # schema first
+pnpm --filter @ridesphere/api deploy:staging                                                 # needs `wrangler login`
+```
+
+To point the mobile app at staging, set `EXPO_PUBLIC_API_BASE_URL` to that URL.
+
 ### Not set up yet
 
-Cloudflare deployment (account, Hyperdrive configurations, staging and production Workers), EAS builds, and everything listed as blocked in the feature matrix.
+Production deployment, automated deploys from CI, EAS builds, and everything listed as blocked in the feature matrix.
 
 ## Documentation
 

@@ -62,9 +62,14 @@ pnpm --filter @ridesphere/mobile test        # jest
 
 In `apps/mobile`, add packages with `pnpm exec expo install <pkg>` so versions match the Expo SDK, and read `apps/mobile/AGENTS.md` before touching Expo APIs.
 
+## Deployed environments
+
+- **Staging:** `https://ridesphere-api-staging.amrin78.workers.dev`, Neon `staging` branch through Hyperdrive `ridesphere-staging`. Deploy with `pnpm --filter @ridesphere/api deploy:staging` after migrating `staging`. Deploying to staging is routine; do it when an increment's checks pass.
+- **Production:** does not exist yet. Creating it, or deploying to it, needs the owner's explicit go-ahead.
+
 ## Neon
 
-- Project `ridesphere` (`wandering-darkness-13537447`), AWS Singapore. Branches: `production` (default) and `dev`.
+- Project `ridesphere` (`wandering-darkness-13537447`), AWS Singapore. Branches: `production` (default, empty, no Worker yet), `staging` and `dev`.
 - This directory is linked with the `neon` CLI and pinned to **`dev`**. `services/api/.env` holds the `dev` connection string. Keep it that way: never point local tooling at `production`.
 - Migrations reach `production` only through the release flow in `docs/runbooks/deployment-and-rollback.md`.
 - `neon.ts` is the Neon branch policy (currently empty). `neon config plan` previews, `neon deploy` applies.

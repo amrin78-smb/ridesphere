@@ -4,21 +4,23 @@ Status values: **Implemented** (built, tested, in staging), **Partial** (say wha
 
 Update this in the same change that alters a feature's status. Do not mark something Implemented while it has placeholder responses or untested security rules.
 
-Last reviewed: 2026-10-10. Foundation only; nothing is deployed, so nothing is "in staging" yet.
+Last reviewed: 2026-10-10. Foundation only. The API is deployed to staging; production does not exist yet.
 
 ## Foundation
 
 | Item | Status | Notes |
 | --- | --- | --- |
 | Monorepo, lint, format, typecheck | Implemented | pnpm workspaces |
-| CI workflow | Partial | Written and its steps pass locally; not yet run on GitHub. No bundle-size check yet |
-| API Worker skeleton, health and readiness endpoints, error envelope, request IDs, structured logs | Partial | Works locally against Neon `dev`; not deployed. No CORS, rate limiting or auth yet |
+| CI workflow | Implemented | Passing on GitHub. No bundle-size check yet |
+| API Worker skeleton, health and readiness endpoints, error envelope, request IDs, structured logs | Partial | Deployed to staging at `https://ridesphere-api-staging.amrin78.workers.dev`. No CORS, rate limiting or auth yet |
 | Env binding validation | Implemented | Validated once per isolate; covers `APP_ENV` and `HYPERDRIVE` only so far |
-| Drizzle schema and first migration | Partial | `clubs` table only, applied to Neon `dev` |
-| Hyperdrive connectivity | Partial | Verified through Wrangler's local Hyperdrive emulation only; real Hyperdrive and the transaction spike in ADR-0003 are still to do |
+| Drizzle schema and first migration | Partial | `clubs` table only, applied to Neon `dev` and `staging` |
+| Hyperdrive connectivity | Partial | Staging Worker reaches Neon `staging` through Hyperdrive (readiness 200, about 0.3 s). The row-lock transaction spike in ADR-0003 is still to do |
 | OpenAPI document | Implemented | Generated at `/api/v1/openapi.json`; health routes only |
 | Mobile app shell, tabs, design tokens | Partial | Five tabs, tokens, loading/empty/error component, API client. Bundles for iOS and Android and renders on web; not yet run on a physical device or simulator. Icons and splash are Expo placeholders |
 | Synthetic seed data | Not started | |
+| Staging deployment | Partial | Deployed by hand with `pnpm --filter @ridesphere/api deploy:staging`; not yet automated from CI |
+| Production deployment | Not started | No production Hyperdrive configuration or Worker |
 
 ## MVP features
 
