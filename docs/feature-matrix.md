@@ -28,7 +28,8 @@ Last reviewed: 2026-10-10. Foundation only. The API is deployed to staging; prod
 | --- | --- | --- | --- |
 | A. Auth | Register, login, logout with email and password | Partial | API verified on staging with curl. App screens are built and unit-tested but have not been run on a device yet |
 | A. Auth | Session restore, expired-session handling, unauthenticated deep links | Partial | Session is kept in secure storage by the Better Auth Expo client; behaviour on a device is untested |
-| A. Auth | Google and Apple sign-in | Blocked | Server enables each provider when its credentials are set; no credentials yet and no buttons in the app. Needs a Google Cloud OAuth client and an Apple Developer account |
+| A. Auth | Google sign-in | Blocked | Server enables it when the Google credentials are set; no credentials yet and no button in the app |
+| A. Auth | Apple sign-in | Deferred | Dropped for now by the owner. See open decision 20 before an iOS release |
 | A. Auth | Sign-in rate limiting | Partial | Better Auth database-backed limits (5 sign-ins per minute, 5 sign-ups per hour per IP). No lockout or breached-password check yet |
 | A. Auth | Email verification and password recovery | Blocked | Open decision 10 (email provider) |
 | A. Auth | Account deletion | Blocked | Open decision 13 |

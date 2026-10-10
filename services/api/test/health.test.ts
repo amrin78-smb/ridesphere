@@ -47,6 +47,14 @@ describe('GET /api/v1/health/ready', () => {
   });
 });
 
+describe('GET /', () => {
+  it('points visitors at the health check and the specification', async () => {
+    const res = await get('/');
+    expect(res.status).toBe(200);
+    expect(await res.json()).toMatchObject({ health: '/api/v1/health' });
+  });
+});
+
 describe('error handling', () => {
   it('returns the error envelope for an unknown route', async () => {
     const res = await get('/api/v1/nope');

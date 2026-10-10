@@ -60,12 +60,12 @@ This departs from the proposal's "managed identity provider; no custom password 
 - Auth endpoints live under `/api/v1/auth` and return Better Auth's own error shape (`{ code, message }`), not the RideSphere error envelope. The app maps known codes to its own messages and never displays server messages it does not recognise.
 - Requests carrying a session must present a trusted origin: the app's `ridesphere://` scheme, plus `exp://` (Expo Go) outside production.
 - Rate limits are stored in Postgres because isolates share no memory.
-- Launch sign-in methods: email and password, Google and Apple. The server enables Google or Apple only when its credentials are configured; none are yet.
+- Sign-in methods: email and password, and Google. The server enables Google only when its credentials are configured; none are yet. Apple sign-in was briefly planned and then dropped by the owner the same day; it may have to return before an iOS release (open decision 20).
 - Neon Auth (Neon's managed Better Auth) was looked at after this decision. It was not adopted: it does not offer Apple sign-in and does not document an Expo client, both of which this app needs.
 
 ## Still to settle
 
 1. Password hashing under load against the Workers CPU limit of the plan in use.
 2. Email verification and password reset, which depend on the email provider.
-3. Google and Apple sign-in in the app, once credentials exist.
+3. Google sign-in in the app, once credentials exist.
 4. Account deletion, lockout after repeated failures and a breached-password check.

@@ -7,7 +7,6 @@ export type AuthSecrets = {
   /** Accept the Expo Go development client. Never true in production. */
   allowExpoGo: boolean;
   google?: { clientId: string; clientSecret: string } | undefined;
-  apple?: { clientId: string; clientSecret: string; appBundleIdentifier: string } | undefined;
 };
 
 export const AUTH_BASE_PATH = '/api/v1/auth';
@@ -30,7 +29,6 @@ export function authOptions(secrets: AuthSecrets) {
     },
     socialProviders: {
       ...(secrets.google ? { google: secrets.google } : {}),
-      ...(secrets.apple ? { apple: secrets.apple } : {}),
     },
     // Deep-link scheme of the mobile app. Requests from any other origin are refused.
     // Expo Go identifies itself as exp://, so it is accepted outside production only.

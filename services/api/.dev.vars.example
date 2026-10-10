@@ -8,8 +8,3 @@ BETTER_AUTH_SECRET=
 # Optional. Google sign-in is offered only when both are set.
 GOOGLE_CLIENT_ID=
 GOOGLE_CLIENT_SECRET=
-
-# Optional. Apple sign-in is offered only when all three are set.
-APPLE_CLIENT_ID=
-APPLE_CLIENT_SECRET=
-APPLE_APP_BUNDLE_IDENTIFIER=

@@ -21,6 +21,16 @@ app.use(requestId);
 app.use(requestLogger);
 app.use(secureHeaders());
 app.use(configMiddleware);
+// Not part of the API contract: a signpost for people who open the base URL in a browser.
+app.get('/', (c) =>
+  c.json({
+    service: 'RideSphere API',
+    environment: c.get('config').appEnv,
+    health: '/api/v1/health',
+    specification: '/api/v1/openapi.json',
+  }),
+);
+
 app.route('/api/v1/health', healthRoutes);
 
 // Sign-up, sign-in, sign-out and sessions are served by Better Auth (ADR-0005).

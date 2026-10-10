@@ -17,9 +17,6 @@ const configSchema = z.object({
   BETTER_AUTH_URL: z.url(),
   GOOGLE_CLIENT_ID: optionalSecret,
   GOOGLE_CLIENT_SECRET: optionalSecret,
-  APPLE_CLIENT_ID: optionalSecret,
-  APPLE_CLIENT_SECRET: optionalSecret,
-  APPLE_APP_BUNDLE_IDENTIFIER: optionalSecret,
 });
 
 export type AppConfig = {
@@ -44,18 +41,10 @@ export function parseConfig(env: unknown): AppConfig {
       secret: e.BETTER_AUTH_SECRET,
       baseUrl: e.BETTER_AUTH_URL,
       allowExpoGo: e.APP_ENV !== 'production',
-      // A provider is offered only when all of its credentials are present.
+      // Google sign-in is offered only when both credentials are present.
       google:
         e.GOOGLE_CLIENT_ID && e.GOOGLE_CLIENT_SECRET
           ? { clientId: e.GOOGLE_CLIENT_ID, clientSecret: e.GOOGLE_CLIENT_SECRET }
-          : undefined,
-      apple:
-        e.APPLE_CLIENT_ID && e.APPLE_CLIENT_SECRET && e.APPLE_APP_BUNDLE_IDENTIFIER
-          ? {
-              clientId: e.APPLE_CLIENT_ID,
-              clientSecret: e.APPLE_CLIENT_SECRET,
-              appBundleIdentifier: e.APPLE_APP_BUNDLE_IDENTIFIER,
-            }
           : undefined,
     },
   };

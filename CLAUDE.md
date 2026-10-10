@@ -6,7 +6,7 @@ RideSphere is about social discovery and organising real-world rides and trips. 
 
 ## Current state
 
-Increments 1–3 are done and increment 4 (auth and profile) is partly done: monorepo, CI, API Worker deployed to staging, email-and-password sign-up/sign-in through Better Auth, `/api/v1/me`, and app screens for sign-in and basic profile. The app has not yet been run on a physical device. Still open in increment 4: Google and Apple sign-in (waiting on credentials), email verification and password reset (waiting on an email provider), account deletion, riding preferences. Launch market is Thailand (Asia/Bangkok, THB). Check `docs/feature-matrix.md` for what exists before assuming anything does.
+Increments 1–3 are done and increment 4 (auth and profile) is partly done: monorepo, CI, API Worker deployed to staging, email-and-password sign-up/sign-in through Better Auth, `/api/v1/me`, and app screens for sign-in and basic profile. The app has not yet been run on a physical device. Still open in increment 4: Google sign-in (waiting on credentials; Apple sign-in was dropped for now), email verification and password reset (waiting on an email provider), account deletion, riding preferences. Launch market is Thailand (Asia/Bangkok, THB). Check `docs/feature-matrix.md` for what exists before assuming anything does.
 
 ## Where things are
 

@@ -93,6 +93,23 @@ pnpm --filter @ridesphere/api deploy:staging                                    
 
 To point the mobile app at staging, set `EXPO_PUBLIC_API_BASE_URL` to that URL.
 
+### Google sign-in
+
+The API offers Google sign-in once it has a Google OAuth client. In [Google Cloud Console](https://console.cloud.google.com/):
+
+1. Create a project, then configure the OAuth consent screen (Google Auth Platform → Branding): app name, support email, audience **External**. While it is in testing, add each tester's Google address under **Audience → Test users**.
+2. Under **Clients**, create an OAuth client of type **Web application**.
+3. Add this authorised redirect URI for staging: `https://ridesphere-api-staging.amrin78.workers.dev/api/v1/auth/callback/google` (and `http://localhost:8787/api/v1/auth/callback/google` for local development).
+4. Store the client ID and secret as Worker secrets. Do not put them in Git or in the mobile app:
+
+```sh
+cd services/api
+pnpm exec wrangler secret put GOOGLE_CLIENT_ID --env staging
+pnpm exec wrangler secret put GOOGLE_CLIENT_SECRET --env staging
+```
+
+For local development put the same two names in `services/api/.dev.vars`.
+
 ### Not set up yet
 
 Production deployment, automated deploys from CI, EAS builds, and everything listed as blocked in the feature matrix.
