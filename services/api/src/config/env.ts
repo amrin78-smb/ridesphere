@@ -7,7 +7,11 @@ import { AppError } from '../common/errors';
 import { log } from '../common/logger';
 import type { AppBindings } from '../common/types';
 
-const optionalSecret = z.string().min(1).optional();
+// An empty value counts as unset, so a blank secret cannot take the whole service down.
+const optionalSecret = z
+  .string()
+  .optional()
+  .transform((value) => value?.trim() || undefined);
 
 // Every name here must also be described in the root .env.example.
 const configSchema = z.object({

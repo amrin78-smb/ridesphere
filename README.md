@@ -100,7 +100,7 @@ The API offers Google sign-in once it has a Google OAuth client. In [Google Clou
 1. Create a project, then configure the OAuth consent screen (Google Auth Platform → Branding): app name, support email, audience **External**. While it is in testing, add each tester's Google address under **Audience → Test users**.
 2. Under **Clients**, create an OAuth client of type **Web application**.
 3. Add this authorised redirect URI for staging: `https://ridesphere-api-staging.amrin78.workers.dev/api/v1/auth/callback/google` (and `http://localhost:8787/api/v1/auth/callback/google` for local development).
-4. Store the client ID and secret as Worker secrets. Do not put them in Git or in the mobile app:
+4. Store the client ID and secret as Worker secrets. Do not put them in Git or in the mobile app. Run these in a real terminal: Wrangler prompts for the value, and without a prompt it uploads an empty one.
 
 ```sh
 cd services/api

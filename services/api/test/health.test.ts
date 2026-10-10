@@ -74,6 +74,14 @@ describe('configuration', () => {
     );
   });
 
+  it('treats a blank or half-configured Google client as not configured', () => {
+    expect(parseConfig({ ...env, GOOGLE_CLIENT_ID: '' }).auth.google).toBeUndefined();
+    expect(parseConfig({ ...env, GOOGLE_CLIENT_ID: 'id-only' }).auth.google).toBeUndefined();
+    expect(
+      parseConfig({ ...env, GOOGLE_CLIENT_ID: 'id', GOOGLE_CLIENT_SECRET: 'secret' }).auth.google,
+    ).toEqual({ clientId: 'id', clientSecret: 'secret' });
+  });
+
   it('accepts the test bindings', () => {
     expect(parseConfig(env).appEnv).toBe('local');
   });
