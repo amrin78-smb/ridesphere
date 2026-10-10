@@ -1,0 +1,30 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "ridesphere-api",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-09-15",
+  "compatibility_flags": ["nodejs_compat"],
+  "observability": { "enabled": true },
+  // Run the Worker near the database rather than near the caller (ADR-0003).
+  "placement": { "mode": "smart" },
+
+  // Top level = local development (`wrangler dev`). The local database comes from
+  // CLOUDFLARE_HYPERDRIVE_LOCAL_CONNECTION_STRING_HYPERDRIVE in services/api/.env, never from this file.
+  "vars": { "APP_ENV": "local" },
+  "hyperdrive": [{ "binding": "HYPERDRIVE", "id": "00000000000000000000000000000000" }],
+
+  // Bindings are not inherited by environments, so each one repeats them.
+  // Replace the placeholder Hyperdrive IDs after `wrangler hyperdrive create` for each environment.
+  "env": {
+    "staging": {
+      "name": "ridesphere-api-staging",
+      "vars": { "APP_ENV": "staging" },
+      "hyperdrive": [{ "binding": "HYPERDRIVE", "id": "REPLACE_WITH_STAGING_HYPERDRIVE_ID" }],
+    },
+    "production": {
+      "name": "ridesphere-api-production",
+      "vars": { "APP_ENV": "production" },
+      "hyperdrive": [{ "binding": "HYPERDRIVE", "id": "REPLACE_WITH_PRODUCTION_HYPERDRIVE_ID" }],
+    },
+  },
+}

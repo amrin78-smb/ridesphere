@@ -1,0 +1,13 @@
+packages:
+  - apps/*
+  - services/*
+  - packages/*
+minimumReleaseAgeExclude:
+  - prettier@3.9.10
+
+# Packages allowed to run install scripts (they download platform binaries).
+allowBuilds:
+  esbuild: true
+  workerd: true
+  unrs-resolver: true
+  '@parcel/watcher': true

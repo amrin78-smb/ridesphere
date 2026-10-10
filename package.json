@@ -1,0 +1,21 @@
+{
+  "name": "ridesphere",
+  "private": true,
+  "packageManager": "pnpm@12.10.1",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "lint": "pnpm -r run lint",
+    "typecheck": "pnpm -r run typecheck",
+    "test": "pnpm -r run test",
+    "build": "pnpm -r run build",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "devDependencies": {
+    "@neon/config": "^1.8.6",
+    "@neon/env": "^1.5.3",
+    "prettier": "^3.9.10"
+  }
+}

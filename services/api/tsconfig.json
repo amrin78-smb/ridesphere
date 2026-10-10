@@ -1,0 +1,7 @@
+{
+  "extends": "@ridesphere/config/tsconfig.base.json",
+  "compilerOptions": {
+    "types": ["./worker-configuration.d.ts", "@cloudflare/vitest-plugin/types", "node"]
+  },
+  "include": ["src", "test", "*.ts"]
+}
