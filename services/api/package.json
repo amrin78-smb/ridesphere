@@ -7,8 +7,8 @@
     "dev": "wrangler dev",
     "build": "wrangler deploy --dry-run --outdir dist",
     "typegen": "wrangler types",
-    "lint": "eslint .",
-    "typecheck": "wrangler types && tsc --noEmit",
+    "lint": "wrangler types > /dev/null && eslint .",
+    "typecheck": "wrangler types > /dev/null && tsc --noEmit",
     "test": "vitest run",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate"
