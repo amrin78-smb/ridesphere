@@ -5,3 +5,4 @@ export * from './errors';
 export * from './health';
 export * from './me';
 export * from './preferences';
+export * from './rides';

@@ -18,5 +18,7 @@ export type AppBindings = {
     db: Database;
     /** Set by `requireUser`. */
     user: CurrentUser;
+    /** Set by `optionalUser` when the request comes from a signed-in, active member. */
+    viewer?: { id: string };
   };
 };

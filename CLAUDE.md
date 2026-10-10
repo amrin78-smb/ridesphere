@@ -6,7 +6,7 @@ RideSphere is about social discovery and organising real-world rides and trips. 
 
 ## Current state
 
-Increments 1–3 are done and increment 4 (auth and profile) is partly done: monorepo, CI, API Worker deployed to staging, email-and-password sign-up/sign-in through Better Auth, `/api/v1/me`, and app screens for sign-in and basic profile. The app has not yet been run on a physical device. Google sign-in works on staging from Android in Expo Go; iOS and standalone builds are untested (Apple sign-in was dropped for now). Riding preferences and account deletion are built and verified on staging, with app screens not yet tried on a device. Still open in increment 4: email verification and password reset (waiting on a domain and email provider) and avatars (waiting on media storage). Next is increment 5, ride discovery. Launch market is Thailand (Asia/Bangkok, THB). Check `docs/feature-matrix.md` for what exists before assuming anything does.
+Increments 1–3 are done and increment 4 (auth and profile) is partly done: monorepo, CI, API Worker deployed to staging, email-and-password sign-up/sign-in through Better Auth, `/api/v1/me`, and app screens for sign-in and basic profile. The app has not yet been run on a physical device. Google sign-in works on staging from Android in Expo Go; iOS and standalone builds are untested (Apple sign-in was dropped for now). Riding preferences and account deletion are built and verified on staging, with app screens not yet tried on a device. Still open in increment 4: email verification and password reset (waiting on a domain and email provider) and avatars (waiting on media storage). Increment 5 (ride discovery and detail) is built: `GET /api/v1/rides`, `GET /api/v1/rides/{id}`, visibility rules in `modules/rides/policy.ts`, sample rides, and the Rides tab. No map, GPX, ride creation or RSVP yet. Next is increment 6, ride publishing and RSVP, which first needs database-backed tests. Launch market is Thailand (Asia/Bangkok, THB). Check `docs/feature-matrix.md` for what exists before assuming anything does.
 
 ## Where things are
 
@@ -56,6 +56,7 @@ pnpm --filter @ridesphere/api dev            # wrangler dev on :8787, needs serv
 pnpm --filter @ridesphere/api test           # vitest inside workerd
 pnpm --filter @ridesphere/api db:generate --name=<what_changed>   # after editing src/db/schema.ts
 pnpm --filter @ridesphere/api db:migrate     # applies to DATABASE_URL in services/api/.env
+pnpm --filter @ridesphere/api db:seed --confirm-not-production   # sample club and rides; never production
 pnpm --filter @ridesphere/api deploy:staging # after migrating the staging branch
 pnpm --filter @ridesphere/mobile start       # expo; apps/mobile/.env points it at an API
 pnpm --filter @ridesphere/mobile test        # jest
@@ -100,7 +101,7 @@ In `apps/mobile`, add packages with `pnpm exec expo install <pkg>` so versions m
 
 **Logs** must not contain tokens, personal data or payment payloads.
 
-**Seed data** is clearly synthetic and kept apart from production. Never fabricate ratings, booking counts, locations or successful operations in the UI.
+**Seed data** is clearly synthetic and kept apart from production. Sample rows carry `is_sample = true`, and the app must label them "Sample". Never fabricate ratings, booking counts, locations or successful operations in the UI.
 
 ## Out of scope for the MVP
 

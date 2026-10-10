@@ -22,6 +22,7 @@ This is an engineering record. It is not legal advice and does not by itself mak
 | Display name, avatar | `users`, R2 | Identity in the community | Per profile visibility | Life of account |
 | Home area (city or district), locale, languages | `users` | Ride and buddy discovery | Per profile visibility | Life of account |
 | Bike types, riding styles, pace, experience, distance range | `user_preferences` | Matching rides | Per profile visibility | Life of account |
+| Rides a member organises | `rides.organiser_id` | Showing who runs a ride | Anyone who can see the ride (display name only) | The ride is kept if the organiser deletes their account, with the organiser link removed. Revisit with open decision 13 |
 | Club memberships and roles | `club_memberships` | Permissions, club pages | Club members; public if the club is public | Life of membership, then removed |
 | RSVPs and attendance history | `ride_rsvps` | Capacity, participant lists | Organiser; participants per ride rules | To be decided |
 | Posts, comments, reactions | `posts`, `comments`, `reactions` | Community | Per content visibility | Until deleted by author or moderation |

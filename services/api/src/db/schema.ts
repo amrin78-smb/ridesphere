@@ -1,5 +1,15 @@
 import { sql } from 'drizzle-orm';
-import { check, integer, pgEnum, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
+import {
+  boolean,
+  check,
+  index,
+  integer,
+  pgEnum,
+  pgTable,
+  text,
+  timestamp,
+  uuid,
+} from 'drizzle-orm/pg-core';
 
 import { user } from './auth-schema';
 
@@ -96,5 +106,73 @@ export const clubs = pgTable('clubs', {
   description: text('description').notNull().default(''),
   region: text('region').notNull(),
   status: clubStatus('status').notNull().default('pending'),
+  // Synthetic demonstration data, never real. Lets it be labelled and removed safely.
+  isSample: boolean('is_sample').notNull().default(false),
   ...timestamps,
 });
+
+export const rideStatus = pgEnum('ride_status', ['draft', 'published', 'cancelled', 'completed']);
+export const rideVisibility = pgEnum('ride_visibility', ['public', 'members', 'private']);
+export const rideTerrain = pgEnum('ride_terrain', ['road', 'gravel', 'trail', 'mixed']);
+export const rideDifficulty = pgEnum('ride_difficulty', ['easy', 'moderate', 'hard', 'expert']);
+export const meetingDetailVisibility = pgEnum('meeting_detail_visibility', [
+  'public',
+  'members',
+  'participants',
+]);
+
+export const rides = pgTable(
+  'rides',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    clubId: uuid('club_id').references(() => clubs.id, { onDelete: 'set null' }),
+    // Kept when the organiser deletes their account, so a published ride does not vanish
+    // for the people planning to attend. Revisit with the retention policy (open decision 13).
+    organiserId: uuid('organiser_id').references(() => user.id, { onDelete: 'set null' }),
+    title: text('title').notNull(),
+    description: text('description').notNull().default(''),
+    // An instant in UTC plus the ride's own IANA zone: "07:00 in Bangkok" must stay
+    // 07:00 in Bangkok whatever the viewer's device says.
+    startsAt: timestamp('starts_at', { withTimezone: true }).notNull(),
+    endsAt: timestamp('ends_at', { withTimezone: true }),
+    timezone: text('timezone').notNull(),
+    // A broad area such as a city or district, used for discovery.
+    area: text('area').notNull(),
+    bikeTypes: text('bike_types')
+      .array()
+      .notNull()
+      .default(sql`'{}'::text[]`),
+    terrain: rideTerrain('terrain').notNull(),
+    pace: ridingPace('pace').notNull(),
+    difficulty: rideDifficulty('difficulty').notNull(),
+    distanceM: integer('distance_m').notNull(),
+    elevationM: integer('elevation_m'),
+    capacity: integer('capacity'),
+    requirements: text('requirements').notNull().default(''),
+    cancellationPolicy: text('cancellation_policy').notNull().default(''),
+    // Safe to show to anyone who can see the ride, for example "Lumphini Park, east side".
+    meetingPointName: text('meeting_point_name').notNull(),
+    // Exact instructions. Only returned to viewers allowed by meetingDetailsVisibleTo.
+    meetingPointDetails: text('meeting_point_details').notNull().default(''),
+    meetingDetailsVisibleTo: meetingDetailVisibility('meeting_details_visible_to')
+      .notNull()
+      .default('members'),
+    visibility: rideVisibility('visibility').notNull().default('public'),
+    status: rideStatus('status').notNull().default('draft'),
+    isSample: boolean('is_sample').notNull().default(false),
+    ...timestamps,
+  },
+  (table) => [
+    index('rides_discovery_idx').on(table.status, table.startsAt, table.id),
+    check('rides_distance_positive', sql`${table.distanceM} > 0`),
+    check(
+      'rides_elevation_not_negative',
+      sql`${table.elevationM} is null or ${table.elevationM} >= 0`,
+    ),
+    check('rides_capacity_positive', sql`${table.capacity} is null or ${table.capacity} > 0`),
+    check(
+      'rides_ends_after_start',
+      sql`${table.endsAt} is null or ${table.endsAt} > ${table.startsAt}`,
+    ),
+  ],
+);

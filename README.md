@@ -8,7 +8,7 @@ The name and branding are provisional, pending domain, trademark and app-store c
 
 ## Status
 
-**Foundation plus the first feature: accounts.** The API is deployed to a staging environment on Cloudflare, members can sign up and sign in with email and password, and the mobile app has its five tabs with sign-in and a basic profile. The app has not been tested on a device yet. See the [feature matrix](docs/feature-matrix.md) for progress and [open decisions](docs/open-decisions.md) for what is blocking parts of the build.
+**Accounts and ride discovery.** The API is deployed to a staging environment on Cloudflare. Members can sign in with email and password or Google, set a profile and riding preferences, and browse, search and open upcoming rides (sample rides for now). Creating rides and joining them come next. See the [feature matrix](docs/feature-matrix.md) for progress and [open decisions](docs/open-decisions.md) for what is blocking parts of the build.
 
 ## Architecture in brief
 
@@ -52,7 +52,10 @@ cp services/api/.env.example services/api/.env
 cp services/api/.dev.vars.example services/api/.dev.vars   # then set BETTER_AUTH_SECRET
 neon connection-string dev    # paste the result as both values in services/api/.env
 pnpm --filter @ridesphere/api db:migrate
+pnpm --filter @ridesphere/api db:seed --confirm-not-production   # optional: sample rides
 ```
+
+The seed adds one made-up club and twelve made-up rides, all flagged as samples and labelled "Sample" in the app. Add `--remove` to take them out again. Never run it against production.
 
 ### API
 

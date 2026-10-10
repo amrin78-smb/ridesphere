@@ -14,11 +14,12 @@ Last reviewed: 2026-10-10. Foundation only. The API is deployed to staging; prod
 | CI workflow | Implemented | Passing on GitHub. No bundle-size check yet |
 | API Worker skeleton, health and readiness endpoints, error envelope, request IDs, structured logs | Partial | Deployed to staging at `https://ridesphere-api-staging.amrin78.workers.dev`. No CORS, rate limiting or auth yet |
 | Env binding validation | Implemented | Validated once per isolate; covers environment, database and auth settings |
-| Drizzle schema and first migration | Partial | `clubs`, Better Auth tables, `profiles` and `user_preferences`, applied to Neon `dev` and `staging` |
+| Drizzle schema and first migration | Partial | `clubs`, Better Auth tables, `profiles`, `user_preferences` and `rides`, applied to Neon `dev` and `staging`. Route fields live on `rides`; a separate `ride_routes` table will come with GPX |
+| Database-backed automated tests | Not started | API tests fake the database, so SQL filters, paging and constraints are checked by hand against dev, not in CI. Needed before RSVP capacity rules (increment 6) |
 | Hyperdrive connectivity | Partial | Staging Worker reaches Neon `staging` through Hyperdrive (readiness 200, about 0.3 s). The row-lock transaction spike in ADR-0003 is still to do |
 | OpenAPI document | Partial | Generated at `/api/v1/openapi.json` for health and `/me`. Better Auth's own endpoints under `/api/v1/auth` are not in it |
 | Mobile app shell, tabs, design tokens | Partial | Five tabs, tokens, loading/empty/error component, API client, sign-in and profile screens. Runs on an Android phone in Expo Go; not yet run on iOS. Icons and splash are Expo placeholders |
-| Synthetic seed data | Not started | |
+| Synthetic seed data | Implemented | `pnpm --filter @ridesphere/api db:seed --confirm-not-production`: one sample club and 12 sample rides, all flagged `is_sample` and labelled "Sample" in the app. Loaded on dev and staging |
 | Staging deployment | Partial | Deployed by hand with `pnpm --filter @ridesphere/api deploy:staging`; not yet automated from CI |
 | Production deployment | Not started | No production Hyperdrive configuration or Worker |
 
@@ -37,15 +38,15 @@ Last reviewed: 2026-10-10. Foundation only. The API is deployed to staging; prod
 | B. Profile | Riding preferences: bike types, styles, pace, experience, distance, languages | Partial | `PUT /api/v1/me/preferences` verified on staging; the editor screen is unit-tested but untested on a device |
 | B. Profile | Profile visibility controls | Partial | Stored and editable through the API; nothing reads it yet because no other member's profile can be viewed |
 | B. Profile | Roles and account status | Partial | Stored server-side, not settable by the member, suspended and deleted accounts are refused. No admin operations to change them yet |
-| C. Discovery | Ride list with cursor pagination | Not started | |
-| C. Discovery | Search and filters | Not started | |
-| D. Ride detail | Detail screen and route summary | Not started | |
+| C. Discovery | Ride list with cursor pagination | Partial | `GET /api/v1/rides`: upcoming published rides, soonest first, cursor paging. Verified on dev and staging against sample rides; the Rides tab (pull to refresh, load more, loading/empty/error states) is unit-tested but untested on a device |
+| C. Discovery | Search and filters | Partial | API filters: keyword, area, date range, bike type, surface, pace, difficulty, distance, climbing. The app offers keyword, bike type, pace, surface and difficulty; area, date, distance and climbing filters are not in the app yet. No "ride type" field exists |
+| D. Ride detail | Detail screen and route summary | Partial | `GET /api/v1/rides/{id}` and a detail screen, with the organiser-supplied safety note. Times are shown in the ride's own time zone. No map and no GPX |
 | D. Ride detail | GPX upload, validation, download | Not started | |
 | D. Ride detail | Map preview with fallback | Blocked | Open decision 5; fallback state can be built first |
 | E. Participation | RSVP and cancel, duplicate prevention | Not started | |
 | E. Participation | Transactional capacity enforcement | Not started | |
 | E. Participation | Waitlist | Blocked | Open decision 6 |
-| E. Participation | Meeting point hidden until authorised | Not started | |
+| E. Participation | Meeting point hidden until authorised | Partial | Exact instructions are returned only to the audience the organiser chose (everyone, members, or participants). Verified on dev. "Participants" means organiser only until RSVPs exist |
 | F. Clubs | Club profile and upcoming rides | Not started | |
 | F. Clubs | Membership and roles | Not started | |
 | F. Clubs | Organiser ride publishing | Not started | |

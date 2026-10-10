@@ -4,6 +4,7 @@ import { z } from 'zod';
 export const errorCodes = [
   'VALIDATION_FAILED',
   'NOT_FOUND',
+  'INVALID_CURSOR',
   'UNAUTHENTICATED',
   'ACCOUNT_RESTRICTED',
   'INTERNAL_ERROR',

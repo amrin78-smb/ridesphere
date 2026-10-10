@@ -12,6 +12,7 @@ import { dbMiddleware } from './db/middleware';
 import { configRoutes } from './modules/config/routes';
 import { healthRoutes } from './modules/health/routes';
 import { meRoutes } from './modules/me/routes';
+import { rideRoutes } from './modules/rides/routes';
 
 function createRouter() {
   return new OpenAPIHono<AppBindings>({ defaultHook: validationHook });
@@ -40,6 +41,10 @@ app.use(`${AUTH_BASE_PATH}/*`, dbMiddleware);
 app.on(['GET', 'POST'], `${AUTH_BASE_PATH}/*`, (c) =>
   createAuth(c.get('config'), c.get('db')).handler(c.req.raw),
 );
+
+app.use('/api/v1/rides', dbMiddleware);
+app.use('/api/v1/rides/*', dbMiddleware);
+app.route('/api/v1/rides', rideRoutes);
 
 app.use('/api/v1/me', dbMiddleware);
 app.use('/api/v1/me/*', dbMiddleware);
