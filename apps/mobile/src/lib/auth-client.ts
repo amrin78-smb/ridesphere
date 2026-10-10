@@ -3,6 +3,7 @@ import { createAuthClient } from 'better-auth/react';
 import * as SecureStore from 'expo-secure-store';
 
 import { apiBaseUrl } from '@/lib/config';
+import { debugLog } from '@/lib/debug';
 
 const STORAGE_PREFIX = 'ridesphere';
 
@@ -47,6 +48,10 @@ export async function markBrowserSignInStarted() {
  */
 export async function completeBrowserSignIn(cookie: string): Promise<boolean> {
   const startedAt = Number(await storage.getItemAsync(PENDING_KEY));
+  debugLog('completing browser sign-in', {
+    startedSecondsAgo: startedAt ? Math.round((Date.now() - startedAt) / 1000) : null,
+    linkSessionLength: cookie.length,
+  });
   await storage.setItemAsync(PENDING_KEY, '');
   if (!startedAt || Date.now() - startedAt > PENDING_WINDOW_MS) return false;
 

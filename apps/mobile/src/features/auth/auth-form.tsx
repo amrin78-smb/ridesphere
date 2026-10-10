@@ -8,6 +8,7 @@ import { TextField } from '@/components/text-field';
 import { ThemedText } from '@/components/themed-text';
 import { usePublicConfig } from '@/features/auth/use-public-config';
 import { authClient, markBrowserSignInStarted } from '@/lib/auth-client';
+import { debugLog } from '@/lib/debug';
 import { Spacing } from '@/theme';
 
 type Mode = 'sign-in' | 'sign-up';
@@ -88,6 +89,10 @@ export function AuthForm() {
       const result = await authClient.signIn.social({
         provider: 'google',
         callbackURL: '/profile',
+      });
+      debugLog('google sign-in call returned', {
+        error: result.error ? String(result.error.status) : null,
+        hasData: Boolean(result.data),
       });
       if (result.error) {
         setFormError('Google sign-in did not complete. Please try again.');

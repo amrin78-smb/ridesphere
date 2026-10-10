@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { useColorScheme } from 'react-native';
 
 import AppTabs from '@/components/app-tabs';
+import { BrowserSignInReturn } from '@/features/auth/browser-sign-in-return';
 import { createQueryClient } from '@/lib/query-client';
 
 export default function RootLayout() {
@@ -15,6 +16,7 @@ export default function RootLayout() {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+        <BrowserSignInReturn />
         <AppTabs />
       </ThemeProvider>
     </QueryClientProvider>

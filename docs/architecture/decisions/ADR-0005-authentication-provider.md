@@ -63,6 +63,8 @@ This departs from the proposal's "managed identity provider; no custom password 
 - Sign-in methods: email and password, and Google. The server enables Google only when its credentials are configured; none are yet. Apple sign-in was briefly planned and then dropped by the owner the same day; it may have to return before an iOS release (open decision 20).
 - Neon Auth (Neon's managed Better Auth) was looked at after this decision. It was not adopted: it does not offer Apple sign-in and does not document an Expo client, both of which this app needs.
 
+**2026-10-11 — Google sign-in on Android.** In Expo Go on Android the return link from the browser restarts the app, so the Better Auth client call that opened the browser never completes and the session it would have stored is lost. The app therefore reads the session from the return link at startup (`BrowserSignInReturn`), accepting it only if the device started a browser sign-in within ten minutes and only once. Re-check this on iOS and in a standalone build, where the link may resume the app instead.
+
 ## Still to settle
 
 1. Password hashing under load against the Workers CPU limit of the plan in use.

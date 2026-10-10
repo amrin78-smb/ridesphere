@@ -17,7 +17,7 @@ Last reviewed: 2026-10-10. Foundation only. The API is deployed to staging; prod
 | Drizzle schema and first migration | Partial | `clubs`, Better Auth tables and `profiles`, applied to Neon `dev` and `staging` |
 | Hyperdrive connectivity | Partial | Staging Worker reaches Neon `staging` through Hyperdrive (readiness 200, about 0.3 s). The row-lock transaction spike in ADR-0003 is still to do |
 | OpenAPI document | Partial | Generated at `/api/v1/openapi.json` for health and `/me`. Better Auth's own endpoints under `/api/v1/auth` are not in it |
-| Mobile app shell, tabs, design tokens | Partial | Five tabs, tokens, loading/empty/error component, API client, sign-in and profile screens. Bundles for iOS and Android and renders on web; not yet run on a physical device or simulator. Icons and splash are Expo placeholders |
+| Mobile app shell, tabs, design tokens | Partial | Five tabs, tokens, loading/empty/error component, API client, sign-in and profile screens. Runs on an Android phone in Expo Go; not yet run on iOS. Icons and splash are Expo placeholders |
 | Synthetic seed data | Not started | |
 | Staging deployment | Partial | Deployed by hand with `pnpm --filter @ridesphere/api deploy:staging`; not yet automated from CI |
 | Production deployment | Not started | No production Hyperdrive configuration or Worker |
@@ -26,9 +26,9 @@ Last reviewed: 2026-10-10. Foundation only. The API is deployed to staging; prod
 
 | Area | Feature | Status | Notes |
 | --- | --- | --- | --- |
-| A. Auth | Register, login, logout with email and password | Partial | API verified on staging with curl. App screens are built and unit-tested but have not been run on a device yet |
+| A. Auth | Register, login, logout with email and password | Partial | API verified on staging with curl. App screens are unit-tested; the email and password forms have not been exercised on a device yet |
 | A. Auth | Session restore, expired-session handling, unauthenticated deep links | Partial | Session is kept in secure storage by the Better Auth Expo client; behaviour on a device is untested |
-| A. Auth | Google sign-in | Partial | Configured on staging: Google accepts the client and redirect address, and the app shows "Continue with Google" when the server offers it. The full round trip (Google consent, return to the app, session) has not been run on a device |
+| A. Auth | Google sign-in | Partial | Works end to end on staging from an Android phone in Expo Go (2026-10-11). Not yet tested on iOS or in a standalone build, where the return link behaves differently |
 | A. Auth | Apple sign-in | Deferred | Dropped for now by the owner. See open decision 20 before an iOS release |
 | A. Auth | Sign-in rate limiting | Partial | Better Auth database-backed limits (5 sign-ins per minute, 5 sign-ups per hour per IP). No lockout or breached-password check yet |
 | A. Auth | Email verification and password recovery | Blocked | Open decision 10 (email provider) |
