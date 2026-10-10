@@ -72,6 +72,8 @@ Middleware order: request ID → logging → CORS and security headers → rate 
 
 `code` is stable and machine-readable. `message` is safe to show. Internal detail goes to logs only.
 
+The one exception is `/api/v1/auth/*`, which is served by Better Auth and returns its own `{ code, message }` shape. Clients map the codes they know and show a generic message otherwise.
+
 ## Database access from a Worker
 
 Workers cannot hold a connection pool between requests, so the Worker connects to Neon through Hyperdrive, which pools connections close to the database.

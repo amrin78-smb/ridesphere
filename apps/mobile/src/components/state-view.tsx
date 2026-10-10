@@ -1,9 +1,10 @@
-import { ActivityIndicator, Pressable, StyleSheet } from 'react-native';
+import { ActivityIndicator, StyleSheet } from 'react-native';
 
+import { Button } from '@/components/button';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { useTheme } from '@/hooks/use-theme';
-import { MinTouchTarget, Radius, Spacing } from '@/theme';
+import { Radius, Spacing } from '@/theme';
 
 type StateViewProps =
   | { kind: 'loading'; title: string }
@@ -31,20 +32,7 @@ export function StateView(props: StateViewProps) {
           {message}
         </ThemedText>
       ) : null}
-      {onRetry ? (
-        <Pressable
-          onPress={onRetry}
-          accessibilityRole="button"
-          style={({ pressed }) => [
-            styles.button,
-            { backgroundColor: theme.accent },
-            pressed && styles.pressed,
-          ]}>
-          <ThemedText type="smallBold" style={{ color: theme.onAccent }}>
-            Try again
-          </ThemedText>
-        </Pressable>
-      ) : null}
+      {onRetry ? <Button label="Try again" onPress={onRetry} /> : null}
     </ThemedView>
   );
 }
@@ -58,17 +46,5 @@ const styles = StyleSheet.create({
   },
   message: {
     textAlign: 'center',
-  },
-  button: {
-    minHeight: MinTouchTarget,
-    minWidth: MinTouchTarget,
-    marginTop: Spacing.two,
-    paddingHorizontal: Spacing.four,
-    borderRadius: Radius.pill,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  pressed: {
-    opacity: 0.7,
   },
 });

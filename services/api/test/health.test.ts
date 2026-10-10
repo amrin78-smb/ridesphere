@@ -3,6 +3,7 @@ import { env } from 'cloudflare:workers';
 import { describe, expect, it, vi } from 'vitest';
 
 import { app } from '../src/app';
+import { authOptions } from '../src/auth/options';
 import { parseConfig } from '../src/config/env';
 import { withDb } from '../src/db/client';
 
@@ -67,6 +68,13 @@ describe('configuration', () => {
 
   it('accepts the test bindings', () => {
     expect(parseConfig(env).appEnv).toBe('local');
+  });
+
+  it('accepts the Expo Go development client everywhere except production', () => {
+    const origins = (appEnv: string) =>
+      authOptions(parseConfig({ ...env, APP_ENV: appEnv }).auth).trustedOrigins;
+    expect(origins('staging')).toContain('exp://');
+    expect(origins('production')).toEqual(['ridesphere://']);
   });
 });
 

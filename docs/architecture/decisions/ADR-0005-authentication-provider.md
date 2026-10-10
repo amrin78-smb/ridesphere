@@ -51,9 +51,21 @@ This departs from the proposal's "managed identity provider; no custom password 
 - The auth tables hold the most sensitive data in the database: restrict access, keep them out of logs and exports, and cover them in the data inventory.
 - Roles and account status still live in RideSphere's own tables, and suspended or deleted accounts are rejected by the API.
 
-## To settle in increment 4
+## Amendments
 
-1. Better Auth on Workers with Drizzle and Hyperdrive: confirm the adapter and per-request instantiation work.
-2. Password hashing cost against Workers CPU limits.
-3. Which sign-in methods launch: email and password, Apple, Google.
-4. Email verification and reset flow, which depends on the email provider.
+**2026-10-10 — increment 4 findings.**
+
+- Better Auth 1.7 runs on the Worker, created per request with the Drizzle adapter over Hyperdrive. Sign-up, sign-in, sign-out and session checks were exercised on staging.
+- Password hashing uses Better Auth's own Workers build, which calls the runtime's native scrypt. No custom hashing code exists. A handful of sign-ups and sign-ins on staging succeeded in 0.6 to 1.2 seconds each; this was not a load test, and the free plan's CPU limit remains a risk (open decision 19).
+- Auth endpoints live under `/api/v1/auth` and return Better Auth's own error shape (`{ code, message }`), not the RideSphere error envelope. The app maps known codes to its own messages and never displays server messages it does not recognise.
+- Requests carrying a session must present a trusted origin: the app's `ridesphere://` scheme, plus `exp://` (Expo Go) outside production.
+- Rate limits are stored in Postgres because isolates share no memory.
+- Launch sign-in methods: email and password, Google and Apple. The server enables Google or Apple only when its credentials are configured; none are yet.
+- Neon Auth (Neon's managed Better Auth) was looked at after this decision. It was not adopted: it does not offer Apple sign-in and does not document an Expo client, both of which this app needs.
+
+## Still to settle
+
+1. Password hashing under load against the Workers CPU limit of the plan in use.
+2. Email verification and password reset, which depend on the email provider.
+3. Google and Apple sign-in in the app, once credentials exist.
+4. Account deletion, lockout after repeated failures and a breached-password check.

@@ -43,6 +43,7 @@ export function parseConfig(env: unknown): AppConfig {
     auth: {
       secret: e.BETTER_AUTH_SECRET,
       baseUrl: e.BETTER_AUTH_URL,
+      allowExpoGo: e.APP_ENV !== 'production',
       // A provider is offered only when all of its credentials are present.
       google:
         e.GOOGLE_CLIENT_ID && e.GOOGLE_CLIENT_SECRET

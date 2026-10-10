@@ -10,7 +10,9 @@ Choices that belong to the owners and are not yet made. Each one blocks the work
 | 7 | Trip business role: listing/enquiry or booking intermediary | Start with discovery and enquiry | Trips (increment 9), terms of service | Open |
 | 8 | First paid transaction: event registration or trip deposit | Decide after organiser interviews | All payment work (increment 10) | Open |
 | 9 | Payment gateway | Chosen after decision 8, for the launch country | All payment work | Open |
-| 10 | Email provider | Any transactional provider with an HTTP API | Email notifications | Open |
+| 10 | Email provider | Any transactional provider with an HTTP API | Email verification, password reset, email notifications | Open |
+| 18 | Google OAuth client and Apple Developer account | Create both when ready to test social sign-in | Google and Apple sign-in | Open: credentials needed from the owner |
+| 19 | Cloudflare Workers plan | Confirm whether the free plan's CPU limit is enough for password hashing under load; Workers Paid if not | Reliability of sign-in | Open: worked in a small staging test, not load-tested |
 | 11 | Launch languages | English first, strings translation-ready | Localisation effort | Open |
 | 12 | Admin interface | Admin API first, minimal web console behind Cloudflare Access next | Moderation operations | Open |
 | 13 | Account deletion and data retention policy | See proposals in the [data inventory](privacy/data-inventory.md) | Account deletion, privacy policy | Open |
@@ -30,3 +32,6 @@ Choices that belong to the owners and are not yet made. Each one blocks the work
 | 2026-10-10 | Authentication with self-hosted Better Auth (was decision 3) | Owner; ADR-0005 |
 | 2026-10-10 | Neon region: AWS Singapore (ap-southeast-1), nearest to Thailand, subject to privacy advice (was decision 4) | Owner |
 | 2026-10-10 | Development database is a Neon dev branch supplied by the owner | Owner |
+| 2026-10-10 | Sign-in methods: email and password, plus Google and Apple | Owner ("if free, proceed"). Google sign-in has no fee. Apple sign-in has no fee of its own but needs the Apple Developer Program (USD 99 a year), which publishing to the App Store requires anyway |
+| 2026-10-10 | Commit finished work and push directly to `main` | Owner |
+| 2026-10-10 | Staging environment on Cloudflare (Worker `ridesphere-api-staging`, Neon `staging` branch) | Owner asked to publish for testing |

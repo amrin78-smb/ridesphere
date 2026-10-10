@@ -8,7 +8,7 @@ The name and branding are provisional, pending domain, trademark and app-store c
 
 ## Status
 
-**Foundation built, no product features yet.** The API Worker serves health endpoints and an OpenAPI document, the first database migration is applied to the Neon `dev` branch, and the mobile app launches with its five tabs. See the [feature matrix](docs/feature-matrix.md) for progress and [open decisions](docs/open-decisions.md) for what is blocking parts of the build.
+**Foundation plus the first feature: accounts.** The API is deployed to a staging environment on Cloudflare, members can sign up and sign in with email and password, and the mobile app has its five tabs with sign-in and a basic profile. The app has not been tested on a device yet. See the [feature matrix](docs/feature-matrix.md) for progress and [open decisions](docs/open-decisions.md) for what is blocking parts of the build.
 
 ## Architecture in brief
 
@@ -49,6 +49,7 @@ Development uses the Neon `dev` branch, never `production`.
 ```sh
 neon link --project-id wandering-darkness-13537447 --branch dev --no-env-pull
 cp services/api/.env.example services/api/.env
+cp services/api/.dev.vars.example services/api/.dev.vars   # then set BETTER_AUTH_SECRET
 neon connection-string dev    # paste the result as both values in services/api/.env
 pnpm --filter @ridesphere/api db:migrate
 ```
@@ -69,7 +70,9 @@ cp apps/mobile/.env.example apps/mobile/.env     # set EXPO_PUBLIC_API_BASE_URL
 pnpm --filter @ridesphere/mobile start
 ```
 
-Open it in Expo Go, an emulator or a browser. On a phone, the API URL must be your computer's LAN address, and the API must listen on it: `pnpm --filter @ridesphere/api dev --ip 0.0.0.0`.
+Open it in Expo Go on a phone or in an emulator. The simplest setup is to point the app at staging: set `EXPO_PUBLIC_API_BASE_URL=https://ridesphere-api-staging.amrin78.workers.dev`. Accounts work in the iOS and Android app only; the browser build is a layout preview.
+
+To use a local API from a phone instead, the API URL must be your computer's LAN address, and the API must listen on it: `pnpm --filter @ridesphere/api dev --ip 0.0.0.0`.
 
 ### Checks
 

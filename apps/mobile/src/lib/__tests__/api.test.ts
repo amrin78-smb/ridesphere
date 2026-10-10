@@ -1,5 +1,9 @@
 import { healthResponseSchema } from '@ridesphere/shared';
 
+jest.mock('@/lib/auth-client', () => ({
+  authClient: { getCookie: jest.fn().mockResolvedValue('session=abc') },
+}));
+
 const json = (status: number, body: unknown) =>
   Promise.resolve(new Response(JSON.stringify(body), { status }));
 
@@ -53,6 +57,15 @@ describe('apiGet', () => {
       message: 'Temporarily unavailable.',
       details: { status: 503, code: 'DATABASE_UNAVAILABLE', requestId: 'r1' },
     });
+  });
+
+  it('sends the session only when asked to', async () => {
+    const { apiGet, apiRequest } = loadApi('https://api.example.test');
+    fetchMock.mockImplementation(() => json(200, { status: 'ok', environment: 'staging' }));
+    await apiGet('/health', healthResponseSchema);
+    expect(fetchMock.mock.calls[0][1].headers.Cookie).toBeUndefined();
+    await apiRequest('/health', healthResponseSchema, { authenticated: true });
+    expect(fetchMock.mock.calls[1][1].headers.Cookie).toBe('session=abc');
   });
 
   it('reports a network failure', async () => {

@@ -1,6 +1,11 @@
 import { errorEnvelopeSchema, type ErrorCode } from '@ridesphere/shared';
 import type { z } from 'zod';
 
+import { authClient } from '@/lib/auth-client';
+import { apiBaseUrl } from '@/lib/config';
+
+export { isApiConfigured } from '@/lib/config';
+
 /** A failed API call. `kind` tells screens which state to show. */
 export class ApiError extends Error {
   constructor(
@@ -13,41 +18,55 @@ export class ApiError extends Error {
   }
 }
 
-// EXPO_PUBLIC_* values are compiled into the app and are public. Never put a secret in one.
-const baseUrl = process.env.EXPO_PUBLIC_API_BASE_URL?.replace(/\/+$/, '');
+type RequestOptions = {
+  method?: 'GET' | 'POST' | 'PATCH' | 'DELETE';
+  body?: unknown;
+  /** Send the member's session. Leave off for public endpoints. */
+  authenticated?: boolean;
+  signal?: AbortSignal | undefined;
+};
 
-export const isApiConfigured = Boolean(baseUrl);
-
-/** GETs a path under /api/v1 and validates the response against the shared contract. */
-export async function apiGet<T>(
+/** Calls a path under /api/v1 and validates the response against the shared contract. */
+export async function apiRequest<T>(
   path: string,
   schema: z.ZodType<T>,
-  signal?: AbortSignal,
+  { method = 'GET', body, authenticated = false, signal }: RequestOptions = {},
 ): Promise<T> {
-  if (!baseUrl) {
+  if (!apiBaseUrl) {
     throw new ApiError('not-configured', 'The app is not connected to a RideSphere server.');
+  }
+
+  const headers: Record<string, string> = { Accept: 'application/json' };
+  if (body !== undefined) headers['Content-Type'] = 'application/json';
+  if (authenticated) {
+    const cookie = await authClient.getCookie();
+    if (cookie) headers.Cookie = cookie;
   }
 
   let response: Response;
   try {
-    response = await fetch(`${baseUrl}/api/v1${path}`, {
-      headers: { Accept: 'application/json' },
-      signal,
+    response = await fetch(`${apiBaseUrl}/api/v1${path}`, {
+      method,
+      headers,
+      // The session travels in the explicit header above, not in the platform cookie jar.
+      credentials: 'omit',
+      ...(body === undefined ? {} : { body: JSON.stringify(body) }),
+      ...(signal ? { signal } : {}),
     });
   } catch (error) {
     if (error instanceof Error && error.name === 'AbortError') throw error;
     throw new ApiError('network', 'Could not reach RideSphere. Check your connection.');
   }
 
-  let body: unknown;
+  let payload: unknown;
   try {
-    body = await response.json();
+    payload = await response.json();
   } catch {
-    body = undefined;
+    payload = undefined;
   }
 
   if (!response.ok) {
-    const envelope = errorEnvelopeSchema.safeParse(body);
+    const envelope = errorEnvelopeSchema.safeParse(payload);
     if (envelope.success) {
       const { code, message, requestId } = envelope.data.error;
       throw new ApiError('http', message, { status: response.status, code, requestId });
@@ -55,9 +74,13 @@ export async function apiGet<T>(
     throw new ApiError('http', 'Something went wrong.', { status: response.status });
   }
 
-  const parsed = schema.safeParse(body);
+  const parsed = schema.safeParse(payload);
   if (!parsed.success) {
     throw new ApiError('invalid-response', 'RideSphere sent a response this app cannot read.');
   }
   return parsed.data;
+}
+
+export function apiGet<T>(path: string, schema: z.ZodType<T>, signal?: AbortSignal): Promise<T> {
+  return apiRequest(path, schema, { signal });
 }

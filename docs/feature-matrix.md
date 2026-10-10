@@ -13,11 +13,11 @@ Last reviewed: 2026-10-10. Foundation only. The API is deployed to staging; prod
 | Monorepo, lint, format, typecheck | Implemented | pnpm workspaces |
 | CI workflow | Implemented | Passing on GitHub. No bundle-size check yet |
 | API Worker skeleton, health and readiness endpoints, error envelope, request IDs, structured logs | Partial | Deployed to staging at `https://ridesphere-api-staging.amrin78.workers.dev`. No CORS, rate limiting or auth yet |
-| Env binding validation | Implemented | Validated once per isolate; covers `APP_ENV` and `HYPERDRIVE` only so far |
-| Drizzle schema and first migration | Partial | `clubs` table only, applied to Neon `dev` and `staging` |
+| Env binding validation | Implemented | Validated once per isolate; covers environment, database and auth settings |
+| Drizzle schema and first migration | Partial | `clubs`, Better Auth tables and `profiles`, applied to Neon `dev` and `staging` |
 | Hyperdrive connectivity | Partial | Staging Worker reaches Neon `staging` through Hyperdrive (readiness 200, about 0.3 s). The row-lock transaction spike in ADR-0003 is still to do |
-| OpenAPI document | Implemented | Generated at `/api/v1/openapi.json`; health routes only |
-| Mobile app shell, tabs, design tokens | Partial | Five tabs, tokens, loading/empty/error component, API client. Bundles for iOS and Android and renders on web; not yet run on a physical device or simulator. Icons and splash are Expo placeholders |
+| OpenAPI document | Partial | Generated at `/api/v1/openapi.json` for health and `/me`. Better Auth's own endpoints under `/api/v1/auth` are not in it |
+| Mobile app shell, tabs, design tokens | Partial | Five tabs, tokens, loading/empty/error component, API client, sign-in and profile screens. Bundles for iOS and Android and renders on web; not yet run on a physical device or simulator. Icons and splash are Expo placeholders |
 | Synthetic seed data | Not started | |
 | Staging deployment | Partial | Deployed by hand with `pnpm --filter @ridesphere/api deploy:staging`; not yet automated from CI |
 | Production deployment | Not started | No production Hyperdrive configuration or Worker |
@@ -26,11 +26,15 @@ Last reviewed: 2026-10-10. Foundation only. The API is deployed to staging; prod
 
 | Area | Feature | Status | Notes |
 | --- | --- | --- | --- |
-| A. Auth | Register, login, logout, session restore | Not started | Better Auth, ADR-0005 |
+| A. Auth | Register, login, logout with email and password | Partial | API verified on staging with curl. App screens are built and unit-tested but have not been run on a device yet |
+| A. Auth | Session restore, expired-session handling, unauthenticated deep links | Partial | Session is kept in secure storage by the Better Auth Expo client; behaviour on a device is untested |
+| A. Auth | Google and Apple sign-in | Blocked | Server enables each provider when its credentials are set; no credentials yet and no buttons in the app. Needs a Google Cloud OAuth client and an Apple Developer account |
+| A. Auth | Sign-in rate limiting | Partial | Better Auth database-backed limits (5 sign-ins per minute, 5 sign-ups per hour per IP). No lockout or breached-password check yet |
 | A. Auth | Email verification and password recovery | Blocked | Open decision 10 (email provider) |
 | A. Auth | Account deletion | Blocked | Open decision 13 |
-| B. Profile | Profile and riding preferences | Not started | |
-| B. Profile | Profile visibility controls | Not started | |
+| B. Profile | Basic profile: display name, home area, locale | Partial | `GET`/`PATCH /api/v1/me` and an edit screen. Avatar, languages, bike types, riding styles, pace and experience not started |
+| B. Profile | Profile visibility controls | Partial | Stored and editable through the API; nothing reads it yet because no other member's profile can be viewed |
+| B. Profile | Roles and account status | Partial | Stored server-side, not settable by the member, suspended and deleted accounts are refused. No admin operations to change them yet |
 | C. Discovery | Ride list with cursor pagination | Not started | |
 | C. Discovery | Search and filters | Not started | |
 | D. Ride detail | Detail screen and route summary | Not started | |

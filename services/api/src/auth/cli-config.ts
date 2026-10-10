@@ -8,6 +8,7 @@ export const auth = betterAuth({
   ...authOptions({
     secret: 'schema-generation-only-not-a-real-secret',
     baseUrl: 'http://localhost',
+    allowExpoGo: false,
   }),
   database: drizzleAdapter({}, { provider: 'pg' }),
 });

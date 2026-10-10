@@ -4,6 +4,8 @@ import type { BetterAuthOptions } from 'better-auth';
 export type AuthSecrets = {
   secret: string;
   baseUrl: string;
+  /** Accept the Expo Go development client. Never true in production. */
+  allowExpoGo: boolean;
   google?: { clientId: string; clientSecret: string } | undefined;
   apple?: { clientId: string; clientSecret: string; appBundleIdentifier: string } | undefined;
 };
@@ -31,7 +33,8 @@ export function authOptions(secrets: AuthSecrets) {
       ...(secrets.apple ? { apple: secrets.apple } : {}),
     },
     // Deep-link scheme of the mobile app. Requests from any other origin are refused.
-    trustedOrigins: ['ridesphere://'],
+    // Expo Go identifies itself as exp://, so it is accepted outside production only.
+    trustedOrigins: ['ridesphere://', ...(secrets.allowExpoGo ? ['exp://', 'exp://**'] : [])],
     rateLimit: {
       enabled: true,
       // Isolates do not share memory, so counters live in Postgres.
